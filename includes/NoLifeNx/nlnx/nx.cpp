@@ -32,7 +32,13 @@ namespace nl
 
 		bool exists(std::string name)
 		{
+#ifdef MS_PLATFORM_WASM
+			// On WASM, files are loaded on-demand via LazyFS
+			// Skip the existence check since files aren't in VFS yet
+			return true;
+#else
 			return std::ifstream(name).is_open();
+#endif
 		}
 
 		node add_file(std::string name)
